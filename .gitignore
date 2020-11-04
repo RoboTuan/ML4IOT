@@ -2,6 +2,10 @@
 .vscode/*
 
 Lab01/*.wav
+Lab01/*.png
+Lab01/*.jpg
+
+Lab01/images/
 
 Lab02/audio_sequence/
 Lab02/images/
