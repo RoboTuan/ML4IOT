@@ -41,13 +41,16 @@ test_files = filenames[int(n*0.9):]
 LABELS = np.array(tf.io.gfile.listdir(str(data_dir)))
 LABELS = LABELS[LABELS != "README.md"]
 
-# check the frequency
-# frequency = 16000
-# frame_length = 16
-# frame_step = 8
+## STFT
+    # frame_length = 16000Hz * 0.018ms = 128
+    # frame_step = 16000Hz * 0.008ms = 128
 
-STFT_OPTIONS = {'frame_length': 16, 'frame_step': 8, 'mfcc':False}
-MFCC_OPTIONS =  {'frame_length': 40, 'frame_step': 20, 'mfcc':True,
+## MFCC
+    # frame_length = 16000Hz * 0.040ms = 640
+    # frame_step = 16000Hz * 0.020ms = 320
+
+STFT_OPTIONS = {'frame_length': 256, 'frame_step': 128, 'mfcc':False}
+MFCC_OPTIONS =  {'frame_length': 640, 'frame_step': 320, 'mfcc':True,
                     'lower_frequency':20, 'upper_frequency':4000,
                     'num_mel_bins':40, 'num_coefficients':10}
 
