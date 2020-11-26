@@ -165,7 +165,7 @@ class SignalGenerator:
         audio = self.pad(audio)
         spectrogram = self.get_spectrogram(audio)
         mfccs = self.get_mfccs(spectrogram)
-        mfccs = tf.expand_dims(spectrogram, -1)
+        mfccs = tf.expand_dims(mfccs, -1)
 
         return mfccs, label
 
