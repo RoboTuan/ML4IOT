@@ -8,7 +8,7 @@ CHANNELS = 1
 RATE = 48000
 CHUNK = 1024
 RECORD_SECONDS = 3
-WAVE_OUTPUT_FILENAME = "file.wav"
+WAVE_OUTPUT_FILENAME = "file2.wav"
 
 audio = pyaudio.PyAudio()
 
@@ -56,5 +56,5 @@ t_end_storing = t.time()
 print(f"time for sensing the audio: {sensing_time}")
 print(f"Time for storing the data on disk: {round(t_end_storing-t_start_storing, 4)} seconds")
 
-wav_size = os.path.getsize("./file.wav")
+wav_size = os.path.getsize("./file2.wav")
 print(f"The size of the wav file is: {int(wav_size/1024)} KiloBytes")

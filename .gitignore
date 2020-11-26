@@ -1,18 +1,19 @@
 # Ignore my vscode configuration (in this case only python interpreter)
 .vscode/*
 
-Lab01/*.wav
-Lab01/*.png
-Lab01/*.jpg
+Lab*/*.wav
+Lab*/*.png
+Lab*/*.jpg
+Lab*/*.csv
 
-Lab01/images/
 
-Lab02/audio_sequence/
-Lab02/images/
-Lab02/MFCCs/
-Lab02/STFTs/
+Lab*/audio_sequence/
+Lab*/a/
+Lab*/images/
+Lab*/MFCCs/
+Lab*/STFTs/
+Lab*/Silence/
 
-Lab02/*.wav
-Lab02/*.jpg
-Lab02/serialized_mfccs
-Lab02/serialized_spectogram
+Lab*/serialized_mfccs
+Lab*/serialized_spectogram
+
