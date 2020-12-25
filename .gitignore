@@ -5,6 +5,7 @@ Lab*/*.wav
 Lab*/*.png
 Lab*/*.jpg
 Lab*/*.csv
+*.wav
 
 
 Lab*/audio_sequence/
