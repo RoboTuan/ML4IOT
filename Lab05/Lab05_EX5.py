@@ -13,7 +13,7 @@ import datetime
 class Raspberry(object):
     exposed = True
 
-    def __init(self):
+    def __init__(self):
         self.dht_device = adafruit_dht.DHT11(D4)
         audio = pyaudio.PyAudio()
         self.stream = audio.open(format=pyaudio.paInt16, rate= 48000, channels=1,
@@ -25,6 +25,8 @@ class Raspberry(object):
 
     def GET (self, *uri, **query):
 
+        #return "yolo"
+
         now = datetime.datetime.now()
         timestamp = int(now.timestamp())
 
@@ -32,10 +34,10 @@ class Raspberry(object):
         humidity = self.dht_device.humidity
 
         frames = []
-        self.stream.start_stream(0)
+        self.stream.start_stream()
         for _ in range(10):
             data = self.stream.read(4800)
-            frames.appen(data)
+            frames.append(data)
         self.stream.stop_stream()
         audio_b64bytes = base64.b64encode(b''.join(frames))
         audio_string = audio_b64bytes.decode()

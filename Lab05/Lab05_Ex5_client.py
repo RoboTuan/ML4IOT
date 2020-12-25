@@ -41,10 +41,10 @@ for i in range(3):
         wavefile.setnchannels(1)
         wavefile.setsampwidth(2)
         wavefile.setframerate(48000)
-        wavefile.writeframe(audio_bytes)
+        wavefile.writeframes(audio_bytes)
         wavefile.close()
     else:
         print("Error: ", r.status_code)
         break
     
-    time.spleep(30)
+    time.sleep(30)
