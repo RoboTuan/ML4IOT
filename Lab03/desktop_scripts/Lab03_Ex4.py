@@ -10,10 +10,12 @@ import sys
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, default='CNN')
 parser.add_argument('--mfcc', action='store_true')
+parser.add_argument('--silence', action='store_true')
 args = parser.parse_args()
 
 MFCC = args.mfcc
 MODEL = args.model
+SILENCE = args.silence
 print(MFCC)
 
 seed = 42
@@ -32,6 +34,7 @@ data_dir = os.path.join('.', 'data', 'mini_speech_commands')
 filenames = tf.io.gfile.glob(str(data_dir) + '/*/*')
 # Shuffle to have a normal distribution
 filenames = tf.random.shuffle(filenames)
+#print(filenames)
 n = len(filenames)
 
 train_file = filenames[:int(n*0.8)]
@@ -39,7 +42,12 @@ val_files = filenames[int(n*0.8):int(n*0.9)]
 test_files = filenames[int(n*0.9):]
 
 LABELS = np.array(tf.io.gfile.listdir(str(data_dir)))
-LABELS = LABELS[LABELS != "README.md"]
+#print(LABELS)
+
+LABELS = LABELS[LABELS != "README.md" ]
+# Added .DS_Store for mac
+LABELS = LABELS[LABELS != ".DS_Store"]
+#print(LABELS)
 
 ## STFT
     # frame_length = 16000Hz * 0.018ms = 128
@@ -62,6 +70,10 @@ else:
     options = STFT_OPTIONS
     strides = [2,2]
 
+if SILENCE==True:
+    num_labels = 9
+else:
+    num_labels = 8
 
 signal = SignalGenerator(LABELS, 16000, **options)
 train_ds = signal.make_dataset(train_file, True)
@@ -69,9 +81,10 @@ val_ds = signal.make_dataset(val_files, False)
 test_ds = signal.make_dataset(test_files, False)
 
 
-# print(train_file)
+#print(train_file)
 
 # ds = tf.data.Dataset.from_tensor_slices(train_file)
+# print(ds)
 # for element in ds:
 #     parts = tf.strings.split(element, os.path.sep)
 #     print(parts)
@@ -94,8 +107,6 @@ test_ds = signal.make_dataset(test_files, False)
 #     print(audio)    
 #     break
 
-
-
     
 
 if MODEL == "MLP":
@@ -104,7 +115,7 @@ if MODEL == "MLP":
     keras.layers.Dense(256, activation='relu', name='first_dense'),
     keras.layers.Dense(256, activation='relu', name='second_dense'),
     keras.layers.Dense(256, activation='relu', name='third_dense'),
-    keras.layers.Dense(8, name='classifier'),
+    keras.layers.Dense(num_labels, name='classifier'),
     ])
 
 elif MODEL == "CNN":
@@ -119,7 +130,7 @@ elif MODEL == "CNN":
         keras.layers.BatchNormalization(momentum=0.1),
         keras.layers.Activation('relu'),
         keras.layers.GlobalAveragePooling2D(),
-        keras.layers.Dense(8, name='classifier')
+        keras.layers.Dense(num_labels, name='classifier')
     ])
 
 elif MODEL == "DS-CNN":
@@ -136,7 +147,7 @@ elif MODEL == "DS-CNN":
         keras.layers.BatchNormalization(momentum=0.1),
         keras.layers.Activation('relu'),    
         keras.layers.GlobalAveragePooling2D(),
-        keras.layers.Dense(8)
+        keras.layers.Dense(num_labels)
     ])
 
 else:
@@ -151,7 +162,11 @@ model.compile(optimizer='adam',
 
 metric = 'val_sparse_categorical_accuracy'
 
-checkpoint_filepath = './checkpoint/kws_{}_{}/weights'.format(MODEL, MFCC)
+if SILENCE == True:
+    checkpoint_filepath = './checkpointSilence/kws_{}_{}/weights'.format(MODEL, MFCC)
+else:
+    checkpoint_filepath = './checkpoint/kws_{}_{}/weights'.format(MODEL, MFCC)
+
 model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     filepath=checkpoint_filepath,
     save_weights_only=True,
@@ -178,7 +193,11 @@ results = model.evaluate(test_ds, verbose=2)
 
 model.summary()
 
-save_model_dir = './models/kws_{}_{}'.format(MODEL, MFCC)
+if SILENCE == True:
+    save_model_dir = './modelsSilence/kws_{}_{}'.format(MODEL, MFCC)
+else:
+    save_model_dir = './models/kws_{}_{}'.format(MODEL, MFCC)
+
 if not os.path.exists(save_model_dir):
     os.makedirs(save_model_dir)
 
@@ -193,6 +212,3 @@ if not os.path.exists(save_model_dir):
 # y_pred = [[0], [0]]
 # m = tf.keras.metrics.sparse_categorical_accuracy(y_true, y_pred)
 # print(m)
-
-
-

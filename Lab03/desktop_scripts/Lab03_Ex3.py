@@ -113,7 +113,7 @@ if LABEL_OPTIONS <2:
     history = model.fit(
         train_ds,
         batch_size=32,
-        epochs=2,
+        epochs=1,
         #epochs=20,
         # We pass some validation for
         # monitoring validation loss and metrics
@@ -143,8 +143,8 @@ else:
     history = model.fit(
         train_ds,
         batch_size=32,
-        #epochs=2,
         epochs=20,
+        #epochs=20,
         validation_data=(val_ds)
     )
 
@@ -155,4 +155,14 @@ else:
     model.summary()
 
 
+saved_model_dir = "./models/" + MODEL_OPTIONS + "_" + str(LABEL_OPTIONS)
+model.save(saved_model_dir)
 
+
+tflite_model_dir = "./models/tflite_" + MODEL_OPTIONS + "_" + str(LABEL_OPTIONS)
+
+converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir)
+tflite_model = converter.convert()
+with open(tflite_model_dir, 'wb') as fp: fp.write(tflite_model)
+
+print(f"Size of tflite model: {os.path.getsize(tflite_model_dir)} bytes")
