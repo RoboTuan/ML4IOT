@@ -13,8 +13,11 @@ Lab*/images/
 Lab*/MFCCs/
 Lab*/STFTs/
 Lab*/Silence/
-Lab*/models
+Lab*/models*
+Lab*/Screenshots
 Lab*/*/__pycache__
+Lab*/__pycache__
+Lab*/kws*
 
 
 Lab*/serialized_mfccs
