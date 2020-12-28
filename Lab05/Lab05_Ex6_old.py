@@ -28,7 +28,7 @@ class KWSinference(object):
 
         def POST(self, *uri, **query):
         
-                #print(uri, query)
+                print(uri, query)
 
                 audio_string = query.get('audio')
                 

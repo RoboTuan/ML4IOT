@@ -31,6 +31,8 @@ audio = pyaudio.PyAudio()
 now = datetime.datetime.now()
 timestamp = int(now.timestamp())
 
+print("Start recording")
+
 stream = audio.open(format=resolution, rate= samp_rate, channels=1,
                     input_device_index=dev_index, input=True,
                     frames_per_buffer=chunk)
@@ -40,6 +42,7 @@ for i in range(chunks):
     frames.append(data)    
 stream.stop_stream()
 
+print("Stop recording")
 
 audio = np.frombuffer(b''.join(frames), dtype=np.int16)
 audio = signal.resample_poly(audio, 1, 48000/16000)
@@ -48,7 +51,7 @@ buf = BytesIO()
 
 wavefile = wave.open(buf, 'wb')
 wavefile.setnchannels(1)
-wavefile.setsamplewidth(2)
+wavefile.setsampwidth(2)
 wavefile.setframerate(16000)
 wavefile.writeframes(audio.tobytes())
 wavefile.close()
@@ -59,7 +62,7 @@ audio_string = audio_b64bytes.decode()
 
 body = {
     # my url
-    "bn": "http://192.168.1.232/",
+    "bn": "http://192.168.1.92/",
     "bt": timestamp,
     "e": [
         {
@@ -71,7 +74,7 @@ body = {
     ]
 }
 
-url = "http://0.0.0.0:8080/{}".format(args.model)
+url = "http://192.168.1.232:8080/{}".format(args.model)
 
 # I don't need to manually convert body in a json if I use the
 # json parameter in the put request
@@ -81,14 +84,11 @@ if r.status_code == 200:
     rbody = r.json()
     prob = rbody['probability']
     label = rbody['label']
-    print("{} ({}%)".foramt(label, prob))
+    print("{} ({}%)".format(label, prob))
 else:
     print("Error")
     print(r.text)
 
-
-
-print(audio_string)
 
 
 
