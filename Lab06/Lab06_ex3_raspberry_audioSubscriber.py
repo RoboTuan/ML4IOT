@@ -24,7 +24,7 @@ class Subscriber(DoSomething):
 		frames = []
 		audio = pyaudio.PyAudio()
 		
-		now = datetime.datetime.now()
+		now = datetime.now()
 		timestamp = int(now.timestamp())
 
 		print("Start recording")
@@ -37,6 +37,7 @@ class Subscriber(DoSomething):
 			data = stream.read(chunk)
 			frames.append(data)    
 		stream.stop_stream()
+		stream.close()
 
 		print("Stop recording")
 
@@ -70,13 +71,21 @@ class Subscriber(DoSomething):
 			]
 		}
 
+		body = json.dumps(body)
+
+		pub = DoSomething("audioPublisher")
+		pub.run()
+
+		test.myMqttClient.myPublish("/276033/audio", body)
+
+		pub.end()
 
 
 
 if __name__ == "__main__":
-	test = Subscriber("thSubscriber")
+	test = Subscriber("recordAudioSubscriber")
 	test.run()
-	test.myMqttClient.mySubscribe("/276033/audio")
+	test.myMqttClient.mySubscribe("/276033/audio_recording")
 
 	while True:
 		time.sleep(1)
