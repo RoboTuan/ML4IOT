@@ -36,11 +36,8 @@ if __name__ == "__main__":
         #name, unit, timestamp, offset, value 
         body["e"].append({"n": "temperature", "u":"cel", "t": i*10, "v":temperature})
         body["e"].append({"n": "humidity", "u":"RH", "t": i*10, "v":humidity})
-        
-
-
-        
-
+    
+    
         time.sleep(10)
     
     body_json = json.dumps(body)
