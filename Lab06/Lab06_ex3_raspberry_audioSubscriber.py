@@ -76,7 +76,9 @@ class Subscriber(DoSomething):
 		pub = DoSomething("audioPublisher")
 		pub.run()
 
-		test.myMqttClient.myPublish("/276033/audio", body)
+		# non dovrebbe essere pub?
+		#test.myMqttClient.myPublish("/276033/audio", body)
+		pub.myMqttClient.myPublish("/276033/audio", body)
 
 		pub.end()
 
