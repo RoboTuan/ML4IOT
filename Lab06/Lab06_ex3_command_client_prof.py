@@ -46,5 +46,6 @@ if __name__ == "__main__":
     senml = json.dumps(senml)
     test.myMqttClient.myPublish("/276033/record", senml)
 
+    # wait forever to receive the signal from collector client
     while True:
         time.sleep(1)
