@@ -19,30 +19,30 @@ class CollectorClient(DoSomething):
         events = senml['e']
         for event in events:
             if event['n']=='record':
-                record = event['vb']
-            
-            if event['vb'] is True:
-                now = datetime.datetime.now()
-                timestamp = int(now.timestamp())
-                self.stream.start_stream()
-                frames = []
-                for ii in range(10):
-                    data = self.stream.read(4800)
-                    frames.append(data)
-                self.stream.strop_stream()
-                audio_b64bytes = base64.b64encode(b''.join(frames))
-                audio_string = audio_b64bytes.decode()
+                if event['vb'] is True:
+                    now = datetime.datetime.now()
+                    timestamp = int(now.timestamp())
+                    self.stream.start_stream()
+                    frames = []
+                    print("Recording")
+                    for ii in range(10):
+                        data = self.stream.read(4800)
+                        frames.append(data)
+                    self.stream.stop_stream()
+                    audio_b64bytes = base64.b64encode(b''.join(frames))
+                    audio_string = audio_b64bytes.decode()
+                    print("Stop recording")
 
-                output = {
-                    "bn": "http://192.168.1.92/",
-                    "bt": timestamp, 
-                    "e": [
-                        {"n": "audio", "u": "/", "t": 0, "vd": audio_string}
-                    ]
-                }
+                    output = {
+                        "bn": "http://192.168.1.92/",
+                        "bt": timestamp, 
+                        "e": [
+                            {"n": "audio", "u": "/", "t": 0, "vd": audio_string}
+                        ]
+                    }
 
-                output = json.dumps(output)
-                self.myMqttClient.myPublish('/276033/audio', output)
+                    output = json.dumps(output)
+                    self.myMqttClient.myPublish('/276033/audio', output)
 
 if __name__=="__main__":
     test = CollectorClient("collector")
